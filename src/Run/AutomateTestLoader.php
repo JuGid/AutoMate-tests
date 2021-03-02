@@ -1,6 +1,6 @@
 <?php 
 
-namespace AutomateTest;
+namespace AutomateTest\Run;
 
 use AutomateTest\Exception\ClassLoadException;
 use ReflectionClass;
