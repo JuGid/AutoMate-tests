@@ -1,14 +1,10 @@
 <?php 
 
-namespace AutomateTest\Mapper;
+namespace AutomateTest\Group;
 
-use AutomateTest\AutomateTest;
-use Exception;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use RecursiveRegexIterator;
-use ReflectionClass;
-use ReflectionException;
 use RegexIterator;
 
 class ClassMapper {
@@ -30,23 +26,7 @@ class ClassMapper {
             $namespace = $this->getClassNamespaceFromFile($file[0]);
             $fullClassName = $namespace.'\\'.$className;
             
-            if(!class_exists($fullClassName)) {
-                include_once($file[0]);
-            }
-
-            try {
-                $class = new ReflectionClass($fullClassName);
-            } catch(ReflectionException $e) {
-                throw new Exception(
-                    $e->getMessage(),
-                    (int) $e->getCode(),
-                    $e
-                );
-            }
-            
-            if($class->isSubclassOf(AutomateTest::class) && !$class->isAbstract()) {
-                $map[$file[0]] = $class;
-            }
+            $map[$file] = $fullClassName;
             
         }
 
