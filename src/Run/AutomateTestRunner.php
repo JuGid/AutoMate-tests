@@ -76,7 +76,7 @@ class AutomateTestRunner {
                 $automate = new AutoMate($test->get('configuration_filepath'));
                 $errors = $automate->run($test->getScenarioName(),false,true,$test->get('browser'));
 
-                if($errors !== null) {
+                if($errors) {
                     $this->errorHandlerAggregator->addErrorHandler($errors, $test->get('classname'));
                 }
             }
