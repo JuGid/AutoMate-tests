@@ -40,6 +40,10 @@ final class AutomateTestBuilder {
             throw new BuilderException('Builder state is dirty. Something is missing.');
         }
 
+        if($this->state == self::STATE_ALMOST) {
+            throw new BuilderException('Builder state is almost. Should set class and method names.');
+        }
+        
         return $this;
     }
 
@@ -57,8 +61,10 @@ final class AutomateTestBuilder {
             $this->state = self::STATE_ALMOST;
         }
 
-        if($this->state == self::STATE_ALMOST && isset($this->arguments['classname'])) {
-            $this->state = self::STATE_CLEAN;
+        if($this->state == self::STATE_ALMOST){
+            if(isset($this->arguments['method_name']) && isset($this->arguments['classname'])) {
+                $this->state = self::STATE_CLEAN;
+            }
         }
 
         return $this;
@@ -132,9 +138,11 @@ final class AutomateTestBuilder {
         return $this->add('classname', $class, false);
     }
 
+    public function inMethod(string $method) {
+        return $this->add('method_name', $method, false);
+    }
+
     public function getScenarioName() : string {
         return $this->scenario;
     }
-
-    
 }

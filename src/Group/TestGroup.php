@@ -39,13 +39,14 @@ class TestGroup {
             $builder = call_user_func([$class, $reflectionMethod->getName()]);
 
             if(!$builder instanceof AutomateTestBuilder) {
-                throw new RuntimeException(sprintf("Method %s does not return an instance of %s",
-                                                        $reflectionMethod->getName(),
-                                                        AutomateTestBuilder::class
-                                                    ));
+                throw new RuntimeException(
+                    sprintf("Method %s does not return an instance of %s",
+                                $reflectionMethod->getName(),
+                                AutomateTestBuilder::class));
             }
 
-            $builder->inClass($this->className);
+            $builder->inClass($this->className)
+                    ->inMethod($reflectionMethod->getName());
 
             if(!$builder->isClean()) {
                 continue;

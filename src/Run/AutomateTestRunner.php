@@ -4,6 +4,7 @@ namespace AutomateTest\Run;
 
 use Automate\AutoMate;
 use AutomateTest\Aggregator\ErrorHandlerAggregator;
+use AutomateTest\Printer\ResultPrinter;
 use Exception;
 
 class AutomateTestRunner {
@@ -46,12 +47,18 @@ class AutomateTestRunner {
      */
     private $directory = '/';
 
+    /**
+     * @var ResultPrinter
+     */
+    private $printer = null;
+
     public function __construct() {
         $this->state = self::STATE_UNREADY;
         $this->testState = self::WIN;
 
         $this->errorHandlerAggregator = new ErrorHandlerAggregator();
         $this->automateTestAggregator = new AutomateTestAggregator();
+        $this->printer = new ResultPrinter($this->errorHandlerAggregator);
     }
 
     public function testsAreIn(string $directory) {
@@ -77,7 +84,7 @@ class AutomateTestRunner {
                 $errors = $automate->run($test->getScenarioName(),false,true,$test->get('browser'));
 
                 if($errors) {
-                    $this->errorHandlerAggregator->addErrorHandler($errors, $test->get('classname'));
+                    $this->errorHandlerAggregator->addErrorHandler($errors, $test->get('classname'), $test->get('method_name'));
                 }
             }
 
@@ -89,7 +96,7 @@ class AutomateTestRunner {
 
         if($this->state == self::STATE_FINISHED && $this->errorHandlerAggregator->testFailed()) {
             $this->testState = self::FAIL;
-            echo "RESULT \n";
+            $this->printer->print();
         }
         
         exit($this->testState);
