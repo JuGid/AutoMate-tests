@@ -10,6 +10,9 @@ class ErrorHandlerAggregator {
 
     private $nbErrors = 0;
 
+    /**
+     * @todo Should instanciate ErrorHandlerExtended
+     */
     public function addErrorHandler(ErrorHandler $handler, string $fromClass) {
         $this->nbErrors += $handler->countErrors();
 
