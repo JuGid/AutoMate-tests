@@ -2,8 +2,12 @@
 
 namespace AutomateTest\Group;
 
+use AutomateTest\AutomateTestBuilder;
+use Exception;
 use ReflectionClass;
+use ReflectionException;
 use ReflectionMethod;
+use RuntimeException;
 
 class TestGroup {
 
@@ -12,17 +16,48 @@ class TestGroup {
      */
     private $class = null;
 
-    /**
-     * Array of all methods from the class
-     * @var array
-     */
-    private $methods = [];
+    private $className = '';
 
-    public function __construct(ReflectionClass $class)
+    public function __construct(ReflectionClass $class, string $className)
     {
         $this->class = $class;
-        $this->methods = $class->getMethods(ReflectionMethod::IS_PUBLIC);
+        $this->className = $className;
     }
 
-    
+    public function getTestBuilders() : array {
+        
+        try {
+            $class = $this->class->newInstance();
+        } catch(ReflectionException $e) {
+            throw new Exception(sprintf("The class %s cannot be instanciate", $this->class->getName()));
+        }
+
+        $builders = [];
+        $methods = $this->class->getMethods();
+
+        foreach($methods as $reflectionMethod) {
+            $builder = call_user_func([$class, $reflectionMethod->getName()]);
+
+            if(!$builder instanceof AutomateTestBuilder) {
+                throw new RuntimeException(sprintf("Method %s does not return an instance of %s",
+                                                        $reflectionMethod->getName(),
+                                                        AutomateTestBuilder::class
+                                                    ));
+            }
+
+            $builder->inClass($this->className);
+
+            if(!$builder->isClean()) {
+                continue;
+            }
+            
+            $builders[] = $builder;
+        }
+
+        return $builders;
+    }
+
+    public function getClassname() : string {
+        return $this->class->getName();
+    }
 }

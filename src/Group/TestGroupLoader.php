@@ -41,7 +41,7 @@ class TestGroupLoader {
             throw new ClassLoadException(sprintf("Class %s could not be found in %s", $className, $classFile));
         }
 
-        return new TestGroup($class);
+        return new TestGroup($class, $className);
     }
 
 }

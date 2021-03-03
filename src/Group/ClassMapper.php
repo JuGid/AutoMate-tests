@@ -6,6 +6,7 @@ use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use RecursiveRegexIterator;
 use RegexIterator;
+use RuntimeException;
 
 class ClassMapper {
 
@@ -24,6 +25,11 @@ class ClassMapper {
 
             $className = $this->getClassNameFromFile($file[0]);
             $namespace = $this->getClassNamespaceFromFile($file[0]);
+
+            if($className == null || $namespace == null) {
+                continue;
+            }
+
             $fullClassName = $namespace.'\\'.$className;
             
             $map[$file] = $fullClassName;

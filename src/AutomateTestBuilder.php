@@ -8,7 +8,8 @@ use InvalidArgumentException;
 final class AutomateTestBuilder {
 
     public const STATE_DIRTY = 0;
-    public const STATE_CLEAN = 1;
+    public const STATE_ALMOST = 1;
+    public const STATE_CLEAN = 2;
     
     private $state;
 
@@ -24,6 +25,10 @@ final class AutomateTestBuilder {
         
         $this->scenario = $scenario;
         $this->state = self::STATE_DIRTY;
+    }
+
+    public function isClean() : bool {
+        return $this->state == self::STATE_CLEAN;
     }
 
     /**
@@ -49,10 +54,22 @@ final class AutomateTestBuilder {
         }
 
         if(isset($this->arguments['configuration_filepath'])) {
+            $this->state = self::STATE_ALMOST;
+        }
+
+        if($this->state == self::STATE_ALMOST && isset($this->arguments['classname'])) {
             $this->state = self::STATE_CLEAN;
         }
 
         return $this;
+    }
+
+    public function get(string $parameter) {
+        if(!isset($this->arguments[$parameter])) {
+            return null;
+        }
+
+        return $this->arguments[$parameter];
     }
 
     public function withAutomateConfigurationFile(string $filepath) {
@@ -110,4 +127,14 @@ final class AutomateTestBuilder {
     public function datasetShouldThrowError(array $dataset) {
         return $this->add('dataset_should_throw_error', $dataset, false);
     }
+
+    public function inClass(string $class) {
+        return $this->add('classname', $class, false);
+    }
+
+    public function getScenarioName() : string {
+        return $this->scenario;
+    }
+
+    
 }
