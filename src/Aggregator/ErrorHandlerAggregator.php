@@ -3,6 +3,7 @@
 namespace AutomateTest\Aggregator;
 
 use Automate\Handler\ErrorHandler;
+use AutomateTest\AutomateTestBuilder;
 
 class ErrorHandlerAggregator {
 
@@ -13,10 +14,10 @@ class ErrorHandlerAggregator {
     /**
      * @todo Should instanciate ErrorHandlerExtended
      */
-    public function addErrorHandler(ErrorHandler $handler, string $fromClass, string $withMethod) {
+    public function addErrorHandler(ErrorHandler $handler, AutomateTestBuilder $testBuilder) {
         $this->nbErrors += $handler->countErrors();
 
-        $this->errorsHandled[] = new ErrorHandlerExtended($handler, $fromClass, $withMethod);
+        $this->errorsHandled[] = new ErrorHandlerExtended($handler, $testBuilder);
     }
 
     public function testFailed() : bool {

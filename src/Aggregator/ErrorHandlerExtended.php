@@ -3,32 +3,34 @@
 namespace AutomateTest\Aggregator;
 
 use Automate\Handler\ErrorHandler;
+use AutomateTest\AutomateTestBuilder;
 
 class ErrorHandlerExtended {
     
     private $errorHandler = null;
 
-    private $class = '';
+    private $testBuilder = null;
 
-    private $method = '';
-
-    public function __construct(ErrorHandler $errorHandler, string $class, string $method)
+    public function __construct(ErrorHandler $errorHandler, AutomateTestBuilder $testBuilder)
     {
         $this->errorHandler = $errorHandler;
-        $this->class = $class;
-        $this->method = $method;
+        $this->testBuilder = $testBuilder;
     }
 
     public function getClassname() : string {
-        return $this->class;
+        return $this->testBuilder->get('classname');;
     }
 
     public function getMethodname() : string {
-        return $this->method;
+        return $this->testBuilder->get('method_name');
     }
 
     public function getErrorHandler() : ErrorHandler {
         return $this->errorHandler;
+    }
+
+    public function getTestbuilder() : AutomateTestBuilder {
+        return $this->testBuilder;
     }
     
 }

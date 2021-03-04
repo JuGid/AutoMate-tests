@@ -3,6 +3,7 @@
 namespace AutomateTest\Run;
 
 use Automate\AutoMate;
+use Automate\Console\Console;
 use AutomateTest\Aggregator\ErrorHandlerAggregator;
 use AutomateTest\Printer\ResultPrinter;
 use Exception;
@@ -78,21 +79,25 @@ class AutomateTestRunner {
 
         try {
             $tests = $this->automateTestAggregator->collectionOfTestsFrom($this->directory);
-
-            foreach($tests as $test) {
-                $automate = new AutoMate($test->get('configuration_filepath'));
-                $errors = $automate->run($test->getScenarioName(),false,true,$test->get('browser'));
-
-                if($errors) {
-                    $this->errorHandlerAggregator->addErrorHandler($errors, $test->get('classname'), $test->get('method_name'));
-                }
-            }
-
-            $this->state = self::STATE_FINISHED;
         } catch(Exception $e) {
-            echo $e->getMessage()."\n";
+            Console::writeEx($e);
+            exit(1);
+        }
+
+        foreach($tests as $test) {
+            $automate = new AutoMate($test->get('configuration_filepath'));
+            $errors = $automate->run($test->getScenarioName(),false,true,$test->get('browser'));
+
+            if($errors) {
+                $this->errorHandlerAggregator->addErrorHandler($errors, $test);
+            }
+        }
+
+        if($this->errorHandlerAggregator->getCountErrors() > 0) {
             $this->testState = self::FAIL;
         }
+
+        $this->state = self::STATE_FINISHED;
 
         if($this->state == self::STATE_FINISHED && $this->errorHandlerAggregator->testFailed()) {
             $this->testState = self::FAIL;

@@ -36,27 +36,6 @@ final class AutomateTestBuilder {
      * add functionnalities in the future
      */
     public function build() {
-        if($this->state == self::STATE_DIRTY) {
-            throw new BuilderException('Builder state is dirty. Something is missing.');
-        }
-
-        if($this->state == self::STATE_ALMOST) {
-            throw new BuilderException('Builder state is almost. Should set class and method names.');
-        }
-        
-        return $this;
-    }
-
-    /**
-     * Inspired by the doctrine QueryBuilder
-     */
-    private function add(string $option, $value, bool $append = false) {
-        if($append) {
-            $this->arguments[$option][] = $value;
-        } else {
-            $this->arguments[$option] = $value;
-        }
-
         if(isset($this->arguments['configuration_filepath'])) {
             $this->state = self::STATE_ALMOST;
         }
@@ -65,6 +44,52 @@ final class AutomateTestBuilder {
             if(isset($this->arguments['method_name']) && isset($this->arguments['classname'])) {
                 $this->state = self::STATE_CLEAN;
             }
+        }
+
+        if(!isset('data')) {
+            $this->add('data',[],false);
+        }
+    
+        if(!isset('browser')) {
+            $this->add('browser',null,false);
+        }
+
+        if(!isset('should_throw_message')) {
+            $this->add('should_throw_message', '', false);
+        }
+
+        if(!isset('should_throw_error')) {
+            $this->add('should_throw_error', '', false);
+        }
+
+        if(!isset('print_data')) {
+            $this->add('print_data', false, false);
+        }
+
+        if(!isset('print_options')) {
+            $this->add('print_options', false, false);
+        }
+
+        if(!isset('repeat_test_for')) {
+            $this->add('repeat_test_for', 1, false);
+        }
+
+        if($this->state == self::STATE_DIRTY) {
+            throw new BuilderException('Builder state is dirty. Something is missing.');
+        }
+
+        if($this->state == self::STATE_ALMOST) {
+            throw new BuilderException('Builder state is almost. Should set class and method names.');
+        }
+
+        return $this;
+    }
+
+    private function add(string $option, $value, bool $append = false) {
+        if($append) {
+            $this->arguments[$option][] = $value;
+        } else {
+            $this->arguments[$option] = $value;
         }
 
         return $this;
@@ -98,30 +123,6 @@ final class AutomateTestBuilder {
         return $this->add('browser', 'chrome', false);
     }
 
-    public function stopOnError() {
-        return $this->add('stop_on_error', true, false);
-    }
-
-    public function printOptionsAtEnd() {
-        return $this->add('print_options_at_end', true, false);
-    }
-
-    public function writeOnStdError() {
-        return $this->add('write_on_std_error', true, false);
-    }
-
-    public function repeatTestFor(int $time) {
-        return $this->add('repeat_test_for', $time, false);
-    }
-
-    public function createReportFile(string $type = 'xml') {
-        return $this->add('report_file_type', $type, false);
-    }
-
-    public function printErrorsFlat() {
-        return $this->add('print_errors_flat', true, false);
-    }
-
     public function shouldThrowMessage(string $message) {
         return $this->add('should_throw_message', $message, false);
     }
@@ -130,8 +131,16 @@ final class AutomateTestBuilder {
         return $this->add('should_throw_error', $errorClass, false);
     }
 
-    public function datasetShouldThrowError(array $dataset) {
-        return $this->add('dataset_should_throw_error', $dataset, false);
+    public function printDataAtEnd() : self {
+        return $this->add('print_data', true, false);
+    } 
+
+    public function printOptionsAtEnd() {
+        return $this->add('print_options', true, false);
+    }
+
+    public function repeatTestFor(int $time) {
+        return $this->add('repeat_test_for', $time, false);
     }
 
     public function inClass(string $class) {
@@ -145,4 +154,27 @@ final class AutomateTestBuilder {
     public function getScenarioName() : string {
         return $this->scenario;
     }
+
+    /* 
+
+    This should be a global configuration, not in testbuilder
+
+    public function stopOnError() {
+        return $this->add('stop_on_error', true, false);
+    }
+
+    public function writeOnStdError() {
+        return $this->add('write_on_std_error', true, false);
+    }
+
+    public function createReportFile(string $type = 'xml') {
+        return $this->add('report_file_type', $type, false);
+    }
+
+    public function printErrorsFlat() {
+        return $this->add('print_errors_flat', true, false);
+    }
+    */
+
+    
 }
