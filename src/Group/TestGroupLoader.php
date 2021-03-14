@@ -6,7 +6,8 @@ use AutomateTest\Exception\ClassLoadException;
 use ReflectionClass;
 use ReflectionException;
 
-class TestGroupLoader {
+class TestGroupLoader 
+{
     
     public static $loadedClasses = [];
 

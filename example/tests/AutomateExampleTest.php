@@ -7,7 +7,7 @@ use Facebook\WebDriver\Exception\TimeoutException;
 
 class AutomateExampleTest extends AutoMateTest {
 
-    const CONFIG_FILE = '';
+    const CONFIG_FILE = __DIR__.'/../config/config.yaml';
 
     public function testShouldSeeIfAutomateTestWorksWithAutomateBuilder() {
         return $this->createTestBuilder('scenario')

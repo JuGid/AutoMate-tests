@@ -35,7 +35,8 @@ final class AutomateTestBuilder {
      * This function verify the state. This can permit to
      * add functionnalities in the future
      */
-    public function build() {
+    public function build() 
+    {
         if(isset($this->arguments['configuration_filepath'])) {
             $this->state = self::STATE_ALMOST;
         }

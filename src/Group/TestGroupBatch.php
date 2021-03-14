@@ -6,7 +6,8 @@ use AutomateTest\Exception\BatchException;
 use Exception;
 use Iterator;
 
-class TestGroupBatch implements Iterator{
+class TestGroupBatch implements Iterator
+{
 
     private $batchIndex = 0;
 

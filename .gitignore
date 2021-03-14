@@ -1,4 +1,5 @@
 /vendor
+/example/config/config-test.yaml
 test.php
 run.php
 .DS_STORE

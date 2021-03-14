@@ -8,7 +8,8 @@ use RecursiveRegexIterator;
 use RegexIterator;
 use RuntimeException;
 
-class ClassMapper {
+class ClassMapper 
+{
 
     public function getMap(string $path) : array {
         $map = [];

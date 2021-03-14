@@ -2,4 +2,4 @@
 
 namespace AutomateTest\Exception;
 
-class BuilderException extends CustomException {}
+class BuilderException extends CustomException {} 

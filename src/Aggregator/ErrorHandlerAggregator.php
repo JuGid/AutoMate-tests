@@ -5,7 +5,8 @@ namespace AutomateTest\Aggregator;
 use Automate\Handler\ErrorHandler;
 use AutomateTest\AutomateTestBuilder;
 
-class ErrorHandlerAggregator {
+class ErrorHandlerAggregator 
+{
 
     private $errorsHandled = [];
 

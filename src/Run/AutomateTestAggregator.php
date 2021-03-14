@@ -7,7 +7,8 @@ use AutomateTest\Group\TestGroupBatch;
 
 class AutomateTestAggregator {
 
-    public function collectionOfTestsFrom(string $directory) : array {
+    public function collectionOfTestsFrom(string $directory) : array 
+    {
         $batch = new TestGroupBatch($directory);
         $all_tests = [];
 

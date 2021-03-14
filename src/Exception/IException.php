@@ -5,7 +5,7 @@ namespace AutomateTest\Exception;
 /**
  * From PHP Documentation
  */
-interface IException
+interface IException 
 {
     /* Protected methods inherited from Exception class */
 

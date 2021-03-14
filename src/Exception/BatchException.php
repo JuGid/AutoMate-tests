@@ -2,4 +2,4 @@
 
 namespace AutomateTest\Exception;
 
-class BatchException extends CustomException {}
+class BatchException extends CustomException {} 

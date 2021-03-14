@@ -9,7 +9,8 @@ use ReflectionException;
 use ReflectionMethod;
 use RuntimeException;
 
-class TestGroup {
+class TestGroup 
+{
 
     /**
      * @var ReflectionClass
