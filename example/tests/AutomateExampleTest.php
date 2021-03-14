@@ -7,22 +7,21 @@ use Facebook\WebDriver\Exception\TimeoutException;
 
 class AutomateExampleTest extends AutoMateTest {
 
-    const CONFIG_FILE = __DIR__.'/../config/config.yaml';
+    const CONFIG_FILE = __DIR__.'/../config/config-test.yaml';
 
     public function testShouldSeeIfAutomateTestWorksWithAutomateBuilder() {
-        return $this->createTestBuilder('scenario')
+        return $this->createTestBuilder('simple')
                     ->withAutomateConfigurationFile(self::CONFIG_FILE)
                     ->shouldThrowError(TimeoutException::class)
-                    ->printOptionsAtEnd()
-                    ->build();
+                    ->printOptionsAtEnd();
     }
 
     public function testShouldSeeIfAutomateTestWorksWithAutomateBuilderOtherForm() {
-        $builder = new AutomateTestBuilder('scenario');
+        $builder = new AutomateTestBuilder('simple');
         $builder->withAutomateConfigurationFile(self::CONFIG_FILE);
         $builder->withChrome();
         $builder->shouldThrowError(TimeoutException::class);
         $builder->printOptionsAtEnd();
-        return $builder->build(); 
+        return $builder; 
     }
 }

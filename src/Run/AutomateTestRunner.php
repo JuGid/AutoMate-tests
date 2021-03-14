@@ -59,7 +59,7 @@ class AutomateTestRunner {
 
         $this->errorHandlerAggregator = new ErrorHandlerAggregator();
         $this->automateTestAggregator = new AutomateTestAggregator();
-        $this->printer = new ResultPrinter($this->errorHandlerAggregator);
+        $this->printer = new ResultPrinter();
     }
 
     public function testsAreIn(string $directory) {
@@ -85,12 +85,7 @@ class AutomateTestRunner {
         }
 
         foreach($tests as $test) {
-            $automate = new AutoMate($test->get('configuration_filepath'));
-            $errors = $automate->run($test->getScenarioName(),false,true,$test->get('browser'));
-
-            if($errors) {
-                $this->errorHandlerAggregator->addErrorHandler($errors, $test);
-            }
+            $this->runTestForTestBuilders($test);
         }
 
         if($this->errorHandlerAggregator->getCountErrors() > 0) {
@@ -101,10 +96,23 @@ class AutomateTestRunner {
 
         if($this->state == self::STATE_FINISHED && $this->errorHandlerAggregator->testFailed()) {
             $this->testState = self::FAIL;
-            $this->printer->print();
+            $this->printer->print($this->errorHandlerAggregator);
         }
         
         exit($this->testState);
+    }
+
+    private function runTestForTestBuilders(array $testBuilder) {
+        foreach($testBuilder as $test) {
+            $automate = new AutoMate($test->get('configuration_filepath'));
+            $errors = $automate->run($test->getScenarioName(),false,true,$test->get('browser'));
+
+            //AutoMate returns False if an error occured when creating the scenario/runner/logger
+            //Returning an errorHandler doesn't mean that there is not error.
+            if($errors) {
+                $this->errorHandlerAggregator->addErrorHandler($errors, $test);
+            }
+        }
     }
 
     public function getState() : string {

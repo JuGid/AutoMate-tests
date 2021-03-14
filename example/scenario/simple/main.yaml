@@ -1,0 +1,12 @@
+variables:
+  adresse: http://wikipedia.fr
+  message: create-cookie
+scenario:
+  steps:
+    - go: "{{ scenario.adresse }}"
+    - print: "{{ scenario.message }}"
+    - configuration:
+        wait:
+          for: 2
+          every: 100
+    - titleIs: bonjour

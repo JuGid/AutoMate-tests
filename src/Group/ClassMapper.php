@@ -33,7 +33,7 @@ class ClassMapper
 
             $fullClassName = $namespace.'\\'.$className;
             
-            $map[$file] = $fullClassName;
+            $map[$file[0]] = $fullClassName;
             
         }
 

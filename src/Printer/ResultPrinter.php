@@ -9,19 +9,11 @@ use AutomateTest\Exception\PrinterException;
 
 class ResultPrinter {
 
-    private $errors = [];
-
-    public function __construct(ErrorHandlerAggregator $eha) 
-    {
-        $this->errors = $eha->getErrorsHandled();
-        $this->nbErrors = $eha->getCountErrors();
-    }
-
     public function compare(ErrorHandlerExtended $a, ErrorHandlerExtended $b) {
         return strtolower($a->getClassname()) <=> strtolower($b->getClassname());
     }
 
-    public function print() : void {
+    public function print(ErrorHandlerAggregator $eha) : void {
         Console::separator('=');
         Console::writeln("  _____ _____ _____ _____ _____ _____ ");
         Console::writeln(" | __  |   __|  _  |     | __  |_   _|");
@@ -29,6 +21,7 @@ class ResultPrinter {
         Console::writeln(" |__|__|_____|__|  |_____|__|__| |_|  ");
         Console::separator("=");
 
+        /*
         if(empty($this->errors)) {
             Console::writeln('NO ERROR', 'green');
             return;
@@ -46,5 +39,6 @@ class ResultPrinter {
         }
 
         Console::writeln(sprintf('Errors thrown. Total : %d', $this->nbErrors));
+        */
     }
 }

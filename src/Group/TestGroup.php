@@ -37,6 +37,11 @@ class TestGroup
         $methods = $this->class->getMethods();
 
         foreach($methods as $reflectionMethod) {
+            if($reflectionMethod->class != get_class($class)) {
+                continue;
+            }
+            
+
             $builder = call_user_func([$class, $reflectionMethod->getName()]);
 
             if(!$builder instanceof AutomateTestBuilder) {
@@ -47,7 +52,8 @@ class TestGroup
             }
 
             $builder->inClass($this->className)
-                    ->inMethod($reflectionMethod->getName());
+                    ->inMethod($reflectionMethod->getName())
+                    ->build();
 
             if(!$builder->isClean()) {
                 continue;

@@ -47,31 +47,31 @@ final class AutomateTestBuilder {
             }
         }
 
-        if(!isset('data')) {
+        if(!isset($this->arguments['data'])) {
             $this->add('data',[],false);
         }
     
-        if(!isset('browser')) {
-            $this->add('browser',null,false);
+        if(!isset($this->arguments['browser'])) {
+            $this->add('browser','',false);
         }
 
-        if(!isset('should_throw_message')) {
+        if(!isset($this->arguments['should_throw_message'])) {
             $this->add('should_throw_message', '', false);
         }
 
-        if(!isset('should_throw_error')) {
+        if(!isset($this->arguments['should_throw_error'])) {
             $this->add('should_throw_error', '', false);
         }
 
-        if(!isset('print_data')) {
+        if(!isset($this->arguments['print_data'])) {
             $this->add('print_data', false, false);
         }
 
-        if(!isset('print_options')) {
+        if(!isset($this->arguments['print_options'])) {
             $this->add('print_options', false, false);
         }
 
-        if(!isset('repeat_test_for')) {
+        if(!isset($this->arguments['repeat_test_for'])) {
             $this->add('repeat_test_for', 1, false);
         }
 
