@@ -13,7 +13,7 @@ class ResultPrinter {
         return strtolower($a->getClassname()) <=> strtolower($b->getClassname());
     }
 
-    public function print(ErrorHandlerAggregator $eha) : void {
+    public function print(ErrorHandlerAggregator $eha, int $testCount) : void {
         Console::separator('=');
         Console::writeln("  _____ _____ _____ _____ _____ _____ ");
         Console::writeln(" | __  |   __|  _  |     | __  |_   _|");
@@ -40,11 +40,10 @@ class ResultPrinter {
                     $errorHandlerExtended->getMethodname()
                 ));
                 
-                
                 $errorHandlerExtended->getErrorHandler()->printErrors();
             }
     
-            Console::writeln(sprintf("\nErrors thrown. Total : %d", $eha->getCountErrors()), $eha->getCountErrors() > 0 ? 'red': 'green');
+            Console::writeln(sprintf("\nErrors thrown. Total : %d/%d", $eha->getCountErrors(), $testCount), $eha->getCountErrors() > 0 ? 'red': 'green');
         }        
     }
 }

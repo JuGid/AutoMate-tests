@@ -3,8 +3,10 @@
 namespace AutomateTest\Run;
 
 use Automate\AutoMate;
+use Automate\Configuration\Configuration;
 use Automate\Console\Console;
 use AutomateTest\Aggregator\ErrorHandlerAggregator;
+use AutomateTest\Listener\ScreenshotMaker;
 use AutomateTest\Printer\ResultPrinter;
 use Exception;
 
@@ -84,8 +86,11 @@ class AutomateTestRunner {
             exit(1);
         }
 
+        $totalTests = 0;
         foreach($tests as $testbuilder) {
-            $this->runTestForTestBuilders($testbuilder);
+            $numberOfTests = $this->runTestForTestBuilders($testbuilder);
+            
+            $totalTests+=$numberOfTests;
         }
 
         if($this->errorHandlerAggregator->testFailed()) {
@@ -93,25 +98,35 @@ class AutomateTestRunner {
         }
 
         $this->state = self::STATE_FINISHED;
-        $this->printer->print($this->errorHandlerAggregator);
+        $this->printer->print($this->errorHandlerAggregator, $totalTests);
 
         exit($this->testState);
     }
 
-    private function runTestForTestBuilders(array $testBuilder) {
+    private function runTestForTestBuilders(array $testBuilder) : int {
+        $numberOfTests = 0;
         foreach($testBuilder as $test) {
             $this->automate = new AutoMate($test->get('configuration_filepath'));
             $this->automate->doNotPrint();
-            //$automate->registerPlugin(new ScreenshotMaker(Configuration::get('scenario.folder')));
 
-            $errors = $this->automate->run($test->getScenarioName(),false,true,$test->get('browser'));
+            $screenshotsPath =  Configuration::get('scenario.folder') . '/' . $test->getScenarioName();
 
-            //AutoMate returns False if an error occured when creating the scenario/runner/logger
-            //Returning an errorHandler doesn't mean that there is no error.
-            if($errors) {
-                $this->errorHandlerAggregator->addErrorHandler($errors, $test);
+            $this->automate->registerPlugin(new ScreenshotMaker($screenshotsPath));
+
+            for($i=0; $i < $test->get('repeat_test_for'); $i++) {
+
+                $error = $this->automate->run($test->getScenarioName(),false,true,$test->get('browser'));
+
+                //AutoMate returns False if an error occured when creating the scenario/runner/logger
+                //Returning an errorHandler doesn't mean that there is no error.
+                if($error) {
+                    $this->errorHandlerAggregator->addErrorHandler($error, $test);
+                }
+
+                $numberOfTests++;
             }
         }
+        return $numberOfTests;
     }
 
     public function getState() : string {

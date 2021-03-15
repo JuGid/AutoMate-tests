@@ -22,10 +22,10 @@ class AutomateExampleTest extends AutoMateTest {
     }
 
     public function testShouldTestRepeat() {
-        return $this->createTestBuilder('simple')
+        return $this->createTestBuilder('simple-error')
                     ->withChrome()
                     ->withAutomateConfigurationFile(self::CONFIG_FILE)
-                    ->repeatTestFor(5)
+                    ->repeatTestFor(3)
                     ->printOptionsAtEnd();
     }
 }
