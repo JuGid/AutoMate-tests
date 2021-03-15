@@ -9,7 +9,7 @@ use AutomateTest\Exception\PrinterException;
 
 class ResultPrinter {
 
-    public function compare(ErrorHandlerExtended $a, ErrorHandlerExtended $b) {
+    public static function compare(ErrorHandlerExtended $a, ErrorHandlerExtended $b) {
         return strtolower($a->getClassname()) <=> strtolower($b->getClassname());
     }
 
@@ -20,25 +20,31 @@ class ResultPrinter {
         Console::writeln(" |    -|   __|   __|  |  |    -| | |  ");
         Console::writeln(" |__|__|_____|__|  |_____|__|__| |_|  ");
         Console::separator("=");
+        Console::writeln('');
 
-        /*
-        if(empty($this->errors)) {
+        
+        if(!$eha->testFailed()) {
             Console::writeln('NO ERROR', 'green');
-            return;
-        }
+        } else {
 
-        usort($this->errorsHandled, 'compare');
+            //Not needed to sort errors handlers because the class mapper is already ordered
 
-        foreach($this->errorsHandled as $errorHandlerExtended) {
-            Console::writeln(sprintf('In test class %s, in method %s',
-                $errorHandlerExtended->getClassname(),
-                $errorHandlerExtended->getMethodname()
-            ));
+            foreach($eha->getErrorsHandled() as $errorHandlerExtended) {
 
-            $errorHandlerExtended->getErrorHandler()->printErrorsTypeOnly();
-        }
+                if($errorHandlerExtended->getErrorHandler()->countErrors() == 0 ) {
+                    continue;
+                }
 
-        Console::writeln(sprintf('Errors thrown. Total : %d', $this->nbErrors));
-        */
+                Console::writeln(sprintf('%s::%s',
+                    $errorHandlerExtended->getClassname(),
+                    $errorHandlerExtended->getMethodname()
+                ));
+                
+                
+                $errorHandlerExtended->getErrorHandler()->printErrors();
+            }
+    
+            Console::writeln(sprintf("\nErrors thrown. Total : %d", $eha->getCountErrors()), $eha->getCountErrors() > 0 ? 'red': 'green');
+        }        
     }
 }

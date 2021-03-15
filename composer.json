@@ -5,7 +5,7 @@
     "keywords": ["AutoMate", "test", "UI"],
     "license": "MIT",
     "require": {
-        "jugid/auto-mate": "^0.5.0"
+        "jugid/auto-mate": "^0.6.0"
     },
     "authors": [
         {

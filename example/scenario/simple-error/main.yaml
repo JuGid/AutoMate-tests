@@ -9,4 +9,4 @@ scenario:
         wait:
           for: 2
           every: 100
-    - titleContains: Wikipedia
+    - titleIs: Youtube

@@ -11,17 +11,21 @@ class AutomateExampleTest extends AutoMateTest {
 
     public function testShouldSeeIfAutomateTestWorksWithAutomateBuilder() {
         return $this->createTestBuilder('simple')
+                    ->withAutomateConfigurationFile(self::CONFIG_FILE);
+    }
+
+    public function testShouldSeeIfAutomateTestWorksWithAutomateBuilderOtherForm() {
+        return $this->createTestBuilder('simple-error')
                     ->withAutomateConfigurationFile(self::CONFIG_FILE)
                     ->shouldThrowError(TimeoutException::class)
                     ->printOptionsAtEnd();
     }
 
-    public function testShouldSeeIfAutomateTestWorksWithAutomateBuilderOtherForm() {
-        $builder = new AutomateTestBuilder('simple');
-        $builder->withAutomateConfigurationFile(self::CONFIG_FILE);
-        $builder->withChrome();
-        $builder->shouldThrowError(TimeoutException::class);
-        $builder->printOptionsAtEnd();
-        return $builder; 
+    public function testShouldTestRepeat() {
+        return $this->createTestBuilder('simple')
+                    ->withChrome()
+                    ->withAutomateConfigurationFile(self::CONFIG_FILE)
+                    ->repeatTestFor(5)
+                    ->printOptionsAtEnd();
     }
 }

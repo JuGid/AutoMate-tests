@@ -84,31 +84,30 @@ class AutomateTestRunner {
             exit(1);
         }
 
-        foreach($tests as $test) {
-            $this->runTestForTestBuilders($test);
+        foreach($tests as $testbuilder) {
+            $this->runTestForTestBuilders($testbuilder);
         }
 
-        if($this->errorHandlerAggregator->getCountErrors() > 0) {
+        if($this->errorHandlerAggregator->testFailed()) {
             $this->testState = self::FAIL;
         }
 
         $this->state = self::STATE_FINISHED;
+        $this->printer->print($this->errorHandlerAggregator);
 
-        if($this->state == self::STATE_FINISHED && $this->errorHandlerAggregator->testFailed()) {
-            $this->testState = self::FAIL;
-            $this->printer->print($this->errorHandlerAggregator);
-        }
-        
         exit($this->testState);
     }
 
     private function runTestForTestBuilders(array $testBuilder) {
         foreach($testBuilder as $test) {
-            $automate = new AutoMate($test->get('configuration_filepath'));
-            $errors = $automate->run($test->getScenarioName(),false,true,$test->get('browser'));
+            $this->automate = new AutoMate($test->get('configuration_filepath'));
+            $this->automate->doNotPrint();
+            //$automate->registerPlugin(new ScreenshotMaker(Configuration::get('scenario.folder')));
+
+            $errors = $this->automate->run($test->getScenarioName(),false,true,$test->get('browser'));
 
             //AutoMate returns False if an error occured when creating the scenario/runner/logger
-            //Returning an errorHandler doesn't mean that there is not error.
+            //Returning an errorHandler doesn't mean that there is no error.
             if($errors) {
                 $this->errorHandlerAggregator->addErrorHandler($errors, $test);
             }
