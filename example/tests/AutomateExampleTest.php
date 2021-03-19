@@ -25,7 +25,7 @@ class AutomateExampleTest extends AutoMateTest {
         return $this->createTestBuilder('simple-error')
                     ->withChrome()
                     ->withAutomateConfigurationFile(self::CONFIG_FILE)
-                    ->repeatTestFor(3)
+                    ->repeatTestFor(2)
                     ->printOptionsAtEnd();
     }
 }

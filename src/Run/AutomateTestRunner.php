@@ -111,7 +111,7 @@ class AutomateTestRunner {
 
             $screenshotsPath =  Configuration::get('scenario.folder') . '/' . $test->getScenarioName();
 
-            $this->automate->registerPlugin(new ScreenshotMaker($screenshotsPath));
+            //$this->automate->registerPlugin(new ScreenshotMaker($screenshotsPath));
 
             for($i=0; $i < $test->get('repeat_test_for'); $i++) {
 

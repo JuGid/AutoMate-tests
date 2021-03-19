@@ -33,5 +33,14 @@ class ErrorHandlerExtended
     public function getTestbuilder() : AutomateTestBuilder {
         return $this->testBuilder;
     }
+
+    public function respect(string $condition, string $value) {
+
+        if(empty($this->getTestBuilder()->get($condition))) {
+            return true;
+        }
+
+        return $value == $this->getTestBuilder()->get($condition);
+    }
     
 }

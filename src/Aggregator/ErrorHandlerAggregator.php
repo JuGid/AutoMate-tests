@@ -16,7 +16,7 @@ class ErrorHandlerAggregator
      * @todo Should instanciate ErrorHandlerExtended
      */
     public function addErrorHandler(ErrorHandler $handler, AutomateTestBuilder $testBuilder) {
-        $this->nbErrors += $handler->countErrors();
+        $this->nbErrors += $handler->countErrors(); //should always be 1
 
         $this->errorsHandled[] = new ErrorHandlerExtended($handler, $testBuilder);
     }

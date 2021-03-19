@@ -29,21 +29,36 @@ class ResultPrinter {
 
             //Not needed to sort errors handlers because the class mapper is already ordered
 
-            foreach($eha->getErrorsHandled() as $errorHandlerExtended) {
+            foreach($eha->getErrorsHandled() as $errorHandlerEx) {
 
-                if($errorHandlerExtended->getErrorHandler()->countErrors() == 0 ) {
+                $errorHandler = $errorHandlerEx->getErrorHandler();
+                $testBuilder = $errorHandlerEx->getTestbuilder();
+                
+                if($errorHandlerEx->getErrorHandler()->countErrors() == 0 ) {
                     continue;
                 }
 
+                $error = $errorHandler->getErrors()[0];
+
                 Console::writeln(sprintf('%s::%s',
-                    $errorHandlerExtended->getClassname(),
-                    $errorHandlerExtended->getMethodname()
+                    $errorHandlerEx->getClassname(),
+                    $errorHandlerEx->getMethodname()
                 ));
                 
-                $errorHandlerExtended->getErrorHandler()->printErrors();
+                $message = "This scenario does not respect the condition %s : ";
+
+                if(!$errorHandlerEx->respect('should_throw_error', $error->getExceptionClass())) {
+                    Console::writeln(sprintf($message, $testBuilder->get('should_throw_error')));
+                }
+
+                if(!$errorHandlerEx->respect('should_throw_message', $error->getType())) {
+                    Console::writeln(sprintf($message, $testBuilder->get('should_throw_message')));
+                }
+
+                $errorHandlerEx->getErrorHandler()->printErrors();
             }
     
-            Console::writeln(sprintf("\nErrors thrown. Total : %d/%d", $eha->getCountErrors(), $testCount), $eha->getCountErrors() > 0 ? 'red': 'green');
+            Console::writeln(sprintf("\n\tErrors thrown. Total : %d/%d\n", $eha->getCountErrors(), $testCount), $eha->getCountErrors() > 0 ? 'red': 'green');
         }        
     }
 }

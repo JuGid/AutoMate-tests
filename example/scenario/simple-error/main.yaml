@@ -4,7 +4,7 @@ variables:
 scenario:
   steps:
     - go: "{{ scenario.adresse }}"
-    - print: "{{ scenario.message }}"
+    - print: "simple-error"
     - configuration:
         wait:
           for: 2
