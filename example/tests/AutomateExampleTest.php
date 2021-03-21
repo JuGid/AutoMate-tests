@@ -3,29 +3,33 @@
 namespace AutomateTest;
 
 use AutomateTest\AutoMateTest;
-use Facebook\WebDriver\Exception\TimeoutException;
+use InvalidArgumentException;
 
 class AutomateExampleTest extends AutoMateTest {
 
     const CONFIG_FILE = __DIR__.'/../config/config-test.yaml';
 
-    public function testShouldSeeIfAutomateTestWorksWithAutomateBuilder() {
+    public function testShouldTestSimpleScenario() {
         return $this->createTestBuilder('simple')
-                    ->withAutomateConfigurationFile(self::CONFIG_FILE);
+                    ->withAutomateConfigurationFile(self::CONFIG_FILE)
+                    ->printOptionsAtEnd();
     }
 
-    public function testShouldSeeIfAutomateTestWorksWithAutomateBuilderOtherForm() {
+    public function testShouldThrowErrorThatDoesNotRespectTheConditionClass() {
         return $this->createTestBuilder('simple-error')
                     ->withAutomateConfigurationFile(self::CONFIG_FILE)
-                    ->shouldThrowError(TimeoutException::class)
-                    ->printOptionsAtEnd();
+                    ->shouldThrowError(InvalidArgumentException::class);
     }
 
     public function testShouldTestRepeat() {
         return $this->createTestBuilder('simple-error')
-                    ->withChrome()
                     ->withAutomateConfigurationFile(self::CONFIG_FILE)
-                    ->repeatTestFor(2)
-                    ->printOptionsAtEnd();
+                    ->repeatTestFor(2);
+    }
+
+    public function testShouldThrowErrorThatDoesNotRespectTheConditionMessage() {
+        return $this->createTestBuilder('simple-error')
+                    ->withAutomateConfigurationFile(self::CONFIG_FILE)
+                    ->shouldThrowMessage('Title is not Youtube');
     }
 }

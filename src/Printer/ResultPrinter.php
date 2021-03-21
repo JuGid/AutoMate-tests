@@ -56,6 +56,10 @@ class ResultPrinter {
                 }
 
                 $errorHandlerEx->getErrorHandler()->printErrors();
+
+                if($errorHandlerEx->respect('print_options', true)) {
+                    Console::writeln((string) $testBuilder);
+                }
             }
     
             Console::writeln(sprintf("\n\tErrors thrown. Total : %d/%d\n", $eha->getCountErrors(), $testCount), $eha->getCountErrors() > 0 ? 'red': 'green');

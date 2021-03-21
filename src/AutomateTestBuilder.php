@@ -156,6 +156,17 @@ final class AutomateTestBuilder {
         return $this->scenario;
     }
 
+    public function __toString()
+    {
+        $str = "";
+
+        foreach($this->arguments as $option=>$value) {
+            $str .= sprintf("[%s] %s\n", $option, $value);
+        }
+
+        return $str;
+    }
+
     /* 
 
     This should be a global configuration, not in testbuilder
