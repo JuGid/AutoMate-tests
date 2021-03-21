@@ -34,32 +34,32 @@ class ResultPrinter {
                 $errorHandler = $errorHandlerEx->getErrorHandler();
                 $testBuilder = $errorHandlerEx->getTestbuilder();
                 
+                Console::writeln(sprintf('%s::%s',
+                    $errorHandlerEx->getClassname(),
+                    $errorHandlerEx->getMethodname()
+                ));
+
+                if($testBuilder->get('print_options') == true) {
+                    Console::writeln((string) $testBuilder);
+                }
+
                 if($errorHandlerEx->getErrorHandler()->countErrors() == 0 ) {
                     continue;
                 }
 
                 $error = $errorHandler->getErrors()[0];
 
-                Console::writeln(sprintf('%s::%s',
-                    $errorHandlerEx->getClassname(),
-                    $errorHandlerEx->getMethodname()
-                ));
-                
                 $message = "This scenario does not respect the condition %s : ";
 
                 if(!$errorHandlerEx->respect('should_throw_error', $error->getExceptionClass())) {
-                    Console::writeln(sprintf($message, $testBuilder->get('should_throw_error')));
+                    Console::writeln(sprintf($message, $testBuilder->get('should_throw_error')), 'red');
                 }
 
                 if(!$errorHandlerEx->respect('should_throw_message', $error->getType())) {
-                    Console::writeln(sprintf($message, $testBuilder->get('should_throw_message')));
+                    Console::writeln(sprintf($message, $testBuilder->get('should_throw_message')), 'red');
                 }
 
                 $errorHandlerEx->getErrorHandler()->printErrors();
-
-                if($errorHandlerEx->respect('print_options', true)) {
-                    Console::writeln((string) $testBuilder);
-                }
             }
     
             Console::writeln(sprintf("\n\tErrors thrown. Total : %d/%d\n", $eha->getCountErrors(), $testCount), $eha->getCountErrors() > 0 ? 'red': 'green');

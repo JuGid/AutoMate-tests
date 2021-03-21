@@ -161,6 +161,10 @@ final class AutomateTestBuilder {
         $str = "";
 
         foreach($this->arguments as $option=>$value) {
+            if(is_array($value)) {
+                continue;
+            }
+            
             $str .= sprintf("[%s] %s\n", $option, $value);
         }
 
